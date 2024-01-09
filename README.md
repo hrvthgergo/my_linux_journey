@@ -1,4 +1,4 @@
 # about linux
-## this is the learning log and documention related to my linux expirience
+## this is the my own learning log and documention related to my expirience with linux.
 
-i collect my knowledge and code snippets.
+i will collect knowledge summaries and code snippets here.
