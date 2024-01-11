@@ -45,3 +45,11 @@ step3 - expansions
 		- filename expansion/globbing: any word containing one of globbing characters is interpreted as a pattern, and replaced with a list of alphabetically-sorted filenames that match the pattern (if they exist)
 			- globbing pattern characters: *, ?, [], [!]. can be extended -> shopt -s extglob.
 				- symbol(pattern1 | ... | patternN) -> symbols are: ?, *. @, +, !.
+
+step4 - quote removal
+---------------------
+	- during quote removal shell removes all unquoted backslashes, single quote characters, and double quote characters that did not result from a shell expansion.
+	- definitions:
+		- escape character(\): preserves the literal value of the next character that follows, with the exception of newline. if a \newline pair appears, and the backslash itself is not quoted, the \newline is treated as a line continuation.
+		- single quotes(''): preserves the literal value of each character within the quotes.a single quote may not occur between single quotes, even when preceded by a backslash.
+		- double quotes(""): preserves the literal value of all characters within the quotes, with the exception of ‘$’, ‘`’, ‘\’, and, when history expansion is enabled, ‘!’.
