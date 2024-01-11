@@ -1,9 +1,15 @@
 intro
 -----
-to interpret commands bash follows the following process step-by-step, in order.
+to interpret commands bash follows the following process step-by-step, in order:
+	1) tokenization
+	2) command identification
+	3) expansions
+	4) quote removal
+	5) redirection
+	6) execute
 
-step1 - tokenization
---------------------
+step1) - tokenization
+---------------------
 	- during tokenization shell reads its input for unquoted metacharacters and uses them to divide the command line into words, operators and comments(#).
 	- definitions:
 		- a token is either a word or an operator. tokens are separated by metacharacters.
@@ -15,16 +21,16 @@ step1 - tokenization
 		- metacharacters: a character that, when unquoted, separates words; 
 			space, tab, newline or one of the following characters: ‘|’, ‘&’, ‘;’, ‘(’, ‘)’, ‘<’, or ‘>’.
 
-step2 - command identification
-------------------------------
+step2) - command identification
+-------------------------------
 	- during command identification shell breaks the command line down into simple and compound commands.
 	- definitions:
 		- simple commands: are a set of words terminated by a control operator. the first word is the command name, subsequent words are taken as individual arguments (options and their values) to that command.
 		- compound commands: these are bash’s programming constructs. they start with a reserved word and are terminated by the corresponding reserved word. compound commands are the shell programming language constructs, each construct begins with a reserved word or control operator and is terminated by a corresponding reserved word or operator.
 		- reserved words: words that have special meaning to the shell, used to begin and end the shell’s compound commands, link -> https://www.gnu.org/software/bash/manual/html_node/Reserved-Words.html.
 
-step3 - expansions
-------------------
+step3) - expansions
+-------------------
 	- expansion is performed on the command line after it has been split into tokens and identified commands
 	- link: https://www.gnu.org/software/bash/manual/html_node/Shell-Expansions.html
 	- there are seven (+1) kinds of expansions. the processing order is;
@@ -46,16 +52,19 @@ step3 - expansions
 			- globbing pattern characters: *, ?, [], [!]. can be extended -> shopt -s extglob.
 				- symbol(pattern1 | ... | patternN) -> symbols are: ?, *. @, +, !.
 
-step4 - quote removal
----------------------
+step4) - quote removal
+----------------------
 	- during quote removal shell removes all unquoted backslashes, single quote characters, and double quote characters that did not result from a shell expansion.
 	- definitions:
 		- escape character(\): preserves the literal value of the next character that follows, with the exception of newline. if a \newline pair appears, and the backslash itself is not quoted, the \newline is treated as a line continuation.
 		- single quotes(''): preserves the literal value of each character within the quotes.a single quote may not occur between single quotes, even when preceded by a backslash.
 		- double quotes(""): preserves the literal value of all characters within the quotes, with the exception of ‘$’, ‘`’, ‘\’, and, when history expansion is enabled, ‘!’.
 
-step5 - redirection
--------------------
+step5) - redirection
+--------------------
 	- during redirection shell processes any redirection operators to determine where the standard input, standard output and standard error data streams for the command should connect to ( not all commands use every data stream ).
 	- definitions:
 		- redirection operators: ‘<’, ‘>’, '<<‘, '>>', '2>', '2>>', '<&’, ‘>&’, ‘>|’, '<<-’, '<>'.
+
+step6) - execute
+----------------
