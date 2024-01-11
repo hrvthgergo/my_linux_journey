@@ -9,6 +9,12 @@ step1 - tokenization
 		- operators: a control operator or a redirection operator. operators contain at least one unquoted metacharacter.
 		- control operators: a token that performs a control function. it is; 
 			a newline or one of the following -> ‘||’, ‘&&’, ‘&’, ‘;’, ‘;;’, ‘;&’, ‘;;&’, ‘|’, ‘|&’, ‘(’, or ‘)’.
-		- redirection operators: ‘<’, ‘>’, '<<‘, '>>', '2>', '2>>', '<&’, ‘>&’, ‘>|’, '<<-’, '<>.
-		- metacharacters: metacharacter: a character that, when unquoted, separates words; 
+		- redirection operators: ‘<’, ‘>’, '<<‘, '>>', '2>', '2>>', '<&’, ‘>&’, ‘>|’, '<<-’, '<>'.
+		- metacharacters: a character that, when unquoted, separates words; 
 			space, tab, newline or one of the following characters: ‘|’, ‘&’, ‘;’, ‘(’, ‘)’, ‘<’, or ‘>’.
+step2 - command identification
+	- during command identification shell breaks the command line down into simple and compound commands.
+	- definitions:
+		- simple commands: are a set of words terminated by a control operator. the first word is the command name, subsequent words are taken as individual arguments (options and their values) to that command.
+		- compound commands: these are bash’s programming constructs. they start with a reserved word and are terminated by the corresponding reserved word. compound commands are the shell programming language constructs, each construct begins with a reserved word or control operator and is terminated by a corresponding reserved word or operator.
+		- reserved words: words that have special meaning to the shell, used to begin and end the shell’s compound commands.
