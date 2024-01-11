@@ -1,0 +1,13 @@
+to interpret commands bash follows the following process step-by-step, in order.
+
+step1 - tokenization
+	- a token is either a word or an operator. tokens are separated by metacharacters.
+	- definitions:
+		- words: a sequence of characters treated as a unit by the shell. words may not include unquoted metacharacters.
+		- operators: a control operator or a redirection operator. operators contain at least one unquoted metacharacter.
+		- control operators: a token that performs a control function. it is; 
+			a newline or one of the following -> ‘||’, ‘&&’, ‘&’, ‘;’, ‘;;’, ‘;&’, ‘;;&’, ‘|’, ‘|&’, ‘(’, or ‘)’.
+		- redirection operators: ‘<’, ‘>’, '<<‘, '>>', '2>', '2>>', '<&’, ‘>&’, ‘>|’, '<<-’, '<>.
+		- metacharacters: metacharacter: a character that, when unquoted, separates words; 
+			space, tab, newline or one of the following characters: ‘|’, ‘&’, ‘;’, ‘(’, ‘)’, ‘<’, or ‘>’.
+	- during tokenization shell reads its input for unquoted metacharacters and uses them to divide the command line into words, operators and comments (#)
