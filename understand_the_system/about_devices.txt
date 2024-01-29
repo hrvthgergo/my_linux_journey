@@ -1,0 +1,79 @@
+preface
+-------
+    - this file contains information related to the understand what can we consider as a device and how linux handle them.
+
+-----------
+abstraction
+-----------
+
+/dev - device files
+-------------------
+    - the kernel presents many of the device I/O ifs to user processes as files, called device nodes. using device nodes user processes can reference and interact with devs supported by the kernel.
+    - enables user processes to use the devices.
+    - unfortnately there is a limit to what you can do with a file if. therefore, not all devices or capabilities are accessible with standard file I/O.
+    - /dev directory contains device nodes.
+    
+    - there are 4 types of devices -> ls -l /dev:
+        - block devices (b---------) ls -l /sys/block: fixed sized devices, that can split up into blocks of data, e.g. disk devices. quick random access to any block can be managed by the kernel.
+        - character devices (c---------) ls -l /sys/char: work with data streams, do not have predefined size, you can only read chars from or write to this kind of devices. during interaction kernel cannot backup and reexamine the data stream just manage the interchange of data between the streams and the devices.
+        - pipe devices (p---------): like character devices, with another process at the end of the I/O stream instead of kernel.
+        - socket devices (s---------): special purpose ifs, frequently used for interprocess communications, often found outside of the /dev dir.
+    
+    -  not all devices have device nodes;
+        - block and char device I/O ifs are not appropriate in all cases,
+        - network ifs do not have device nodes, it is theoretically possible to interact with a network if using a single char device , but it would be too difficult.
+
+sysfs interface
+---------------
+    - provide uniform view for attached devices based on their actual hardware attributes.
+    - the base path for devices sysfs ifs is /sys/devices, compared to /dev device nodes, is used to view info and manage the device.
+    - to find a sysfs if to a device node, represented in /dev, run the following command:
+        udevadm info --query=all --name=/dev/{device-name}.
+
+about device names
+----------------------
+    - query for a device name -> it is difficult.
+    - /dev/sd* -> hard disks, e.g. /dev/sda refers to an entiry disk /dev/sda1 and /dev/sda2 refer to partitions on disk.
+        sd -> the name stands for SCSI disk; Small Computer System Interface.
+    - /dev/xvd*, /dev/vd* -> virtual disks.
+    - /dev/nvme* -> non-volatile memory disks.
+        nvme list -> listing these devices.
+    - /dev/dm-*, /dev/mapper/* -> device mappers.
+    - /dev/sr* -> cd and dvd drivers.
+    - /dev/tty*, /dev/pts/* -> terminals; char device nodes.
+        chvt {console_num} -> to chnage between consoles, e.g. chvt 1 -> tty1.
+    - /dev/ttyS*, /dev/ttyUSB*, /dev/ttyACM* -> serial ports.
+        screen {route} ->connect to a device via a terminal.
+    
+    - mknod {dev_name} {type} [{major} {minor}] -> creates a device.
+
+--------------
+implementation
+--------------
+
+udev
+----
+    - enables user space programs to configure and use new devices.
+    - a user-space process, that can receive and process kernel notifications about devices, e.g. when a new USB attached. udev examine the new device characteristic, create device node and perform device initialization.
+    - devtmpfs:
+        - unfortunately, if we would manage devices during booting in the previous manner it would be fragile and slow.
+        - devtmpfs filesystem makes it available to device node be created by kernel and only the init process (e.b. setting permissions, notify other processes) is handed over the udev process.
+    -udevadm:
+        - an admin tool for udev, to reload udev rules and trigger events. furthermore, to search for and explore system devices and the ability to monitor events as udev reveives them from the kernel.
+        - sytax:
+            - udevadm <option> --query=all --name={dev_name}.
+        - example:
+            - udevadm info --query=all --name=/dev/sda
+            - udevadm monitor --kernel
+
+dd command
+---------------
+    - dd comand can read from an input file or stream and write to an output file or stream, possibly doing some encoding conversion on the way.
+    - extremely useful with block and char devices.
+    - command format IBM Job Control Language (JCL)
+    - syntax:
+        dd if={input_file/stdinput} of={output/file/stdout} bs=block_size count={num_of_block_to_copy} skip={num}
+    - example:
+        dd if=/dev/zero of=new_file bs=1024 count=1
+
+    

@@ -1,0 +1,194 @@
+------------
+precondition
+------------
+    - about_device.txt
+    - journalctl -k -> kernel level diagnostic messages
+
+    - uuid - universally unique identifier, an industry standard for unique serial nummbers to identify ojects in a computer system.
+
+- disks are block type devices.
+- a simple disk on linux consist of the following parts:
+1)               2)          3)                         4)
+---------------  ----------  -------------------------  ---------
+partition table; partitions; filesystem data structure; file data.
+---------------  ----------  -------------------------  ---------
+
+1) partition table
+------------------
+    - a small area of the given disk storing quantitative and locational infromation about partitions.
+    - bunch of data that says how blocks on the disk are divided.
+
+2) partitions
+-------------
+    - subdivisions of the whole disk, are defined on partition table.
+    - denoted with a number after the whole block device name, e.g. /dev/sda1, /dev/sda2.
+    - kernel handles and presents them as a block device.
+
+logical volume manager (lvm)
+----------------------------
+    - later
+
+3) filesystem
+-------------
+    - database of directories and files.
+
+4) file data
+-------------
+    - a data collection that is attached to the given path of filesystem database of the appropriate partition locational from partition table.
+
+--------------
+implementation
+--------------
+note -> a criticial difference between partitioning and filesys manipulation:
+    - partition table defines simple boundaries on the disk, whereas filesys is a data system. therefore it is suggested to use separate tools for their management.
+
+partitioning disk
+-----------------
+    - partition table types:
+        - master boot record (MBR) table,
+        - globally unique identifier partition table (GPT).
+    - partitioning tools:
+        - parted,.
+        - gparted -> graphical version of parted.
+        - fdisk -> the traditioned text-based tool.
+        
+        - view a partition table:
+            - parted -l
+            - fdisk -l
+        - modify partitions:
+            - no kernel support is needed to rewrite a partition table as user space can read and modify all of block devices.
+            - parted -> https://www.gnu.org/software/parted/manual/parted.html#Using-Parted
+            - blockdev --readpt {dev-node} -> forcing partition table reload
+        -create partitions:
+            - fdisk <dev/...>
+                - m: help,
+                - p: print,
+                - d: delete,
+                - n: new,
+                - q: quit without saving the previous actions in the last process,
+                - w: write to save the result of the process and previous actions.
+
+ssd: solid-state disk
+---------------------
+    - storage device with no moving part.
+    - partition alignment: when data is read from an ssd it is read by chunks, e.g. 4096 or 8192 bytes at a time. this chunks are called pages -> <x bytes pages>. the read must begin at a multiple of that page size. when you read data related to any directory, the nums of reads is depends on or resulted by the volume of the directory data size and the size of the page.
+    - /sys/block/<route to device partition>/start -> print the partition offset.
+
+filesystems
+-----------
+    - a form of database.
+    - structure a simple block device into a tree-like, sophisticated hierarchy of files and subdirectories.
+    - filesystems are traditionally implemented in the kernel, but File System in User Space (FUSE) feature allows user-space filesystems on linux.
+    - filesystem types:
+        - ext4 -> fouth extended filesystem, linux native
+        - btrfs -> b-tree filesystem, linux native
+        - msdos, vfat, exfat -> FAT filesystem, windows native; vfat, exfat for b drives, 
+        - ntfs -> NT filesystem, windows native,
+        - xfs -> high-performance, e.g. Red Hat,
+        - hfsplus -> hfs+, apple native, macintosh,
+        - iso9660 -> cd-rom standard.
+
+    - creating filesystem:
+        - mkfs: a frontend for a series of filesystem creation programs. creates superblocks, usually 4, to be able to recover on failure.
+            - mkfs -n -> print a list of superblock backup numbers without destroying data.
+        - ls -l /sbin/mkfs.*
+            - mkfs.* -> mkfs.ext4, mkfs.ntfs, mkfs.vfat ... .
+    
+    - mounting filesystem
+        - the process of attaching a filesystem to a running system. during booting, the kernel reads config data (/etc/fstab) and mounts root (/) based on that.
+        - common terminology: "mount a device on a mount point".
+        - mount -> print current filesystem status of the system in the below form:
+            <device or uuid> 'on' <mount-point> 'type' <filesystem-type> <mount-options>
+            - r -> mount the filesys in read-only mode,
+            - t <type> -> specify the filesystem type,
+            - n -> do not update the sys runtime mount database /etc/mtab,
+            - o <option,option=value,...> -> use long options,
+                - options: exec,noexec,suid,nosuid,ro,rw,uid,errors,default,noauto,user..
+
+        - unmount <mount-point>
+        - /mnt -> a temp mount point for test purposes.
+    
+    - blkid - block ID:
+        - to view a list of devices and the corresponding filesystems and uuids.
+    
+    - /etc/fstab:
+        - a permanent list of filesystems and options that describes the filesystem to mount during boot time. a line has the following fields:
+            <device-name or uuid> <mount-point> <filesystem-type> <long-options> <backup-infor-for-dump> <integrity-test-order>
+            /dev/sr0              /cdrom        iso9660           ro,user,nosuid 0                       0
+    
+    filesystem capacity:
+    - df: print the size and utilization of your currently mounted filesystems.
+        - df <dir> -> e.g. df .
+    - du: print th edisk usage of every dir in the dir hierarchy, starting at the current working dir.
+
+    filesystem check and repair:
+    - fsck: check a filesystem. there are different program for each fielsystem, e.g. e2/e3/e4fsck.
+        - never use on a mounted filesystem, the kerenl may alter the disk data and corrupt files, this program is used for debugging errors.
+        - p -> in manual mode fsck stops at identified probles and ask to fixing it, using this option ordinary problems will be automatically fixed.
+        - n -> check the filesystem without modifying anything.
+
+    worst case scenario:
+    - 1) use dd command and extract the entire filesys to another partition.
+    - 2) try to patch the filesys as much as possible,
+    - 3) debugfs command -> allows us to look through the files on a filesystem and copy them elsewhere.
+
+    - some filesys serve as system interfaces, to represent system info, such us process ids and kernel diagnostic.
+        - proc -> mounted on /proc each numberes dir inside refers to the id of a current process on the system. /proc/self the current process, /proc/cpuinfo.
+        - sysfs -> mounted on /sys.
+        - tmpfs -> mounted on /run, to use physical memory and swap space as temporary storage.
+        - overlay -> merges dirs into a composite, containers often use.
+
+swap space 
+----------
+	- the method to augment the ram on a machine with disk space.
+	- swapping -> when you run out of real memory, the linux virtual memory system can automatically move pieces of memory to and from swap space of a disk.
+	- free -> print the current swap usage.
+	- mkswap </dev/partition> -> create a swap signature on the partition.
+	- swapon </dev/partition> -> register the space with the kernel. there is a swapoff command.
+ 	- register in the /tec/fstab file to apply swap space during booting time.
+	- swap space -> double the real memory, but this is a really outdated rule. e.g. high-performance servers should never dip into swap space and should avoid disk access if at all possible, because disk I/O is just too slow !BUT! in case of general-purpose machines, that lack of sophisticated monitoring and load-balancing system, it is too dangerous to configure no swap space. if you run our both real memory and swap space the linux kernel invokes the out-of-memory (ooo) killer to kill a process in order.
+
+logical volume manager (lvm)
+----------------------------
+	- select a set of physical volumes(pv) (block devices) to include into a volume group(vg), which acts as a sort of generic data pool, then carve logical volumes(lv) out of the vg.
+	- logical volumes are just block devices and typically contain filesys or swap signatures.
+	- lvm manages how the logical volumes are laid out in the volume group and offers some useful operations such as:
+		- add more pvs,
+		- remove pvs,
+		- resize lvm,
+	without rebooting the machine and in most cases without unmounting any filesys.
+	
+	- device mapper:
+		- /dev/mapper
+		- a layer between a block device and the filesys.
+		- a kernel driver, that inits the block devices for the logical volume and load their mapping tables.
+
+	- lvm -> interactive general-purpose lvm manager tool.
+	- vgs -> a symbolic link to lvm functionality (lvm> vgs ...), but also an individual command.
+		- vgdisplay
+	- lvs
+		- lvdisplay
+	- pvs
+		- pvdisplay
+
+	- working with lvm:
+		1) parted/fdisc -> create partition on the block device.
+		2) vgcreate <vg-name> <block-device> -> create pv and vg in one step.
+			2.1) vas -> to check the creation.
+			2.2) vgscan -> if you do not see new vg.
+		3) vgextend <vg-name-to-extend> <block-device> -> add more pls to the vg.
+		4) lvcreate --size <..>g --type linear -n <lv-name> <vg-name> -> create logical volume.
+			4.1) lvs -> verify the lv creation.
+			4.2) vgdisplay -> check vg state.
+		5) mkfs -t ext4 /dev/mapper/<vg-name>-<lv-name> -> mount a filesys on the new lv === partition lv.
+		6) lvremove <vg-name>/<lv-name> -> remove a lv partition..
+		7) lvresize -r -l +100%FREE <vg-name>/<lv-name> -> resize the lv.
+			7.1) fsadm -v resize /dev/mapper/<vg-name>-<lv-name> -> remount the filesys on resized partition.
+
+ 
+
+preparing new storages:
+-----------------------
+    1) partitioning process/create partitions.
+    2/a) filesystem process/ create, initialize filesystem per partitions -> each partition can has their own filesystem.
+    2/b) init and create lvs via lvm.

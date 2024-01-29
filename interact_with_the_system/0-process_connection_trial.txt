@@ -1,6 +1,12 @@
 intro
 -----
-to interpret commands bash follows the following process step-by-step, in order:
+our main goal is to understand how can we interact with the system using bash shell.
+to be able to reach a common understanding we have to get to know the process-and-progress, that the shell is going to follow to interpret your connection trial.
+we assume that we will contact the system invoking somehowe the bash shell. to do so we have the following options to manage interactions:
+	- using user's terminal,
+	- reads input from a file (called shell script),
+	- reads input from a string supplied as an argument to the -c invocation option of the bash command.
+to interpret commands, sent in any previous forms, bash follows the following process step-by-step, in order:
 	1) tokenization
 	2) command identification
 	3) expansions
@@ -8,6 +14,9 @@ to interpret commands bash follows the following process step-by-step, in order:
 	5) redirection
 	6) execute
 
+let see a brief summery of these steps:
+
+---------------------
 step1) - tokenization
 ---------------------
 	- during tokenization shell reads its input for unquoted metacharacters and uses them to divide the command line into words, operators and comments(#).

@@ -1,0 +1,76 @@
+boot a system:
+--------------
+	- steps
+	-------
+	- bios or boot firmware loads and runs a boot loader.
+	- boot loader finds the kernel image on disk and load it into memory and starts it with a set of kernel params.
+	- kernel init devices and its drivers.
+	- kernel mounts the root filesys.
+	- kernel starts a program called init which also means the user space starts.
+	- init sets the rest of the system processes in motion.
+
+	- boot logs/diagnostic messages
+	-------------------------------
+		- journalctl -k: displays messages from the current boot.
+		- systemd
+		- /var/log/kern.log
+
+	- kernel init order
+	-------------------
+		- cpu inspection,
+		- memory inspection,
+		- device bus discovery,
+		- auxiliary kernel subsys setup,
+		- root filesys mount,
+		- user space start.
+
+	- kernel params
+	---------------
+	- when kernel starts it receives kernel parameters, system details, managing init behavior and diagnostic.
+	- /proc/cmdline contains these parameters.
+	- bootparam manpage
+	- kernel-params.txt reference file.
+
+boot loader:
+------------
+	- its job is to start the kernel (any kind of...)
+	- boot loaders use different drivers to access the disk then kernel. the traditional driver is BIOS (basic input/output system), the newer called uefi (unified extensible firmware interface).
+	- lba (logical block addressing) storage firmwares help/allow the BIOS/UEFI to access the hardware.
+	- efibootmgr -> list of boot target, it it so your system uses uefi or check whether /sys/firmware/efi exists.
+	- when the boot loader found the kernel files, it loads them to the memory.
+	- functionalities:
+		- select from multiple kernels,
+		- switch between sets of kernel params,
+		- allow the user to manually override and edit kernel image names and params,
+		- provide support for booting other op sys.
+
+	- secure boot: requires any boot loader to be digitally signed by trusted authority in order to run.
+
+
+the grand unified boot loader - GRUB:
+-------------------------------------
+	- linux <place of the kernel image> <starting point of filesys> [<kernel options..>]
+	- initrd <ram filesys>
+
+	- config
+	--------
+	- /boot/grub2 -> it contains the central config file called grub.cfg.
+	- grub-mkconfig -> modify grub.cfg basic config options, it runs everything in /etc/grub.d.
+	- /boot/grub2/custom.cfg.
+	
+	- install
+	---------
+	- grub-install <dev-as-source>
+	- grub-install --boot-directory=/mnt/boot <device>
+	- grub-install --efi-directory=<efi-dir> -bootloader-id=<id>
+
+uefi
+----
+	- standardized EFI -> an answer for BIOS limitations.
+	- ESP - efi system partition -> a special VFAT filesys.
+		- mounted on /boot/efi -> /boot/efi/EFI, /boot/efi/microsoft, /boot/efi/apple, /boot/efi/grub, etc.
+
+
+- bootable disk
+- own boot sequence
+- emergency boot up plan
