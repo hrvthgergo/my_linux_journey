@@ -2,12 +2,12 @@
 tokenization process
 --------------------
 
-as the beginning of th interaction above all we have to provide our intention in any of the forms below:
+as the beginning of the interaction above all we have to provide our intention in any of the forms below:
 - we can use a user's terminal, or
 - we can invoking bash by reading input from a string supplied as an argument to the -c invocation option of the bash command, or
 - we can create an executable text file (.sh extension) containing shell commands.
 
-to process one of the inputs listed above, bash breaks the input for unquoted metacharacters and uses them to divide the command line into words, operators and comments(#).
+to process one of the inputs listed above, bash reads its input for unquoted metacharacters and uses them to divide the command line into words, operators and comments(#).
 this process is called tokenization. it is possible we meet some of these definitions in the very first time so make them clear:
     - a token is either a word or an operator. tokens are separated by metacharacters.
 	- words: a sequence of characters treated as a unit by the shell. words may not include unquoted metacharacters.
@@ -29,7 +29,7 @@ the shell maintains a list of aliases that may be set and unset with the alias a
 aliases can be created and listed with the alias command and removed with the unalias command, or defined within file such as .bash_aliases, .bashrc...
 form of aliases:
     	alias alias_name='command | comes | here'
-to separate aliases use new lines.
+to separate/list aliases use new lines.
 
 ------------------
 list of references
