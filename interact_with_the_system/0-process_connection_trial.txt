@@ -1,3 +1,4 @@
+-----
 intro
 -----
 our main goal is to understand how can we interact with the system using bash shell.
@@ -20,16 +21,8 @@ let see a brief summery of these steps:
 step1) - tokenization
 ---------------------
 	- during tokenization shell reads its input for unquoted metacharacters and uses them to divide the command line into words, operators and comments(#).
-	- definitions:
-		- a token is either a word or an operator. tokens are separated by metacharacters.
-		- words: a sequence of characters treated as a unit by the shell. words may not include unquoted metacharacters.
-		- operators: a control operator or a redirection operator. operators contain at least one unquoted metacharacter.
-		- control operators: a token that performs a control function. it is; 
-			a newline or one of the following -> ‘||’, ‘&&’, ‘&’, ‘;’, ‘;;’, ‘;&’, ‘;;&’, ‘|’, ‘|&’, ‘(’, or ‘)’.
-		- redirection operators: ‘<’, ‘>’, '<<‘, '>>', '2>', '2>>', '<&’, ‘>&’, ‘>|’, '<<-’, '<>'.
-		- metacharacters: a character that, when unquoted, separates words; 
-			space, tab, newline or one of the following characters: ‘|’, ‘&’, ‘;’, ‘(’, ‘)’, ‘<’, or ‘>’.
 
+-------------------------------
 step2) - command identification
 -------------------------------
 	- during command identification shell breaks the command line down into simple and compound commands.
@@ -38,6 +31,7 @@ step2) - command identification
 		- compound commands: these are bash’s programming constructs. they start with a reserved word and are terminated by the corresponding reserved word. compound commands are the shell programming language constructs, each construct begins with a reserved word or control operator and is terminated by a corresponding reserved word or operator.
 		- reserved words: words that have special meaning to the shell, used to begin and end the shell’s compound commands, link -> https://www.gnu.org/software/bash/manual/html_node/Reserved-Words.html.
 
+-------------------
 step3) - expansions
 -------------------
 	- expansion is performed on the command line after it has been split into tokens and identified commands
@@ -61,6 +55,7 @@ step3) - expansions
 			- globbing pattern characters: *, ?, [], [!]. can be extended -> shopt -s extglob.
 				- symbol(pattern1 | ... | patternN) -> symbols are: ?, *. @, +, !.
 
+----------------------
 step4) - quote removal
 ----------------------
 	- during quote removal shell removes all unquoted backslashes, single quote characters, and double quote characters that did not result from a shell expansion.
@@ -69,11 +64,13 @@ step4) - quote removal
 		- single quotes(''): preserves the literal value of each character within the quotes.a single quote may not occur between single quotes, even when preceded by a backslash.
 		- double quotes(""): preserves the literal value of all characters within the quotes, with the exception of ‘$’, ‘`’, ‘\’, and, when history expansion is enabled, ‘!’.
 
+--------------------
 step5) - redirection
 --------------------
 	- during redirection shell processes any redirection operators to determine where the standard input, standard output and standard error data streams for the command should connect to ( not all commands use every data stream ).
 	- definitions:
 		- redirection operators: ‘<’, ‘>’, '<<‘, '>>', '2>', '2>>', '<&’, ‘>&’, ‘>|’, '<<-’, '<>'.
 
+----------------
 step6) - execute
 ----------------
