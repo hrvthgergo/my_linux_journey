@@ -27,7 +27,6 @@ step2) - command identification
 -------------------------------
 	- during command identification shell breaks the command line down into simple and compound commands.
 	- definitions:
-		- simple commands: are a set of words terminated by a control operator. the first word is the command name, subsequent words are taken as individual arguments (options and their values) to that command.
 		- compound commands: these are bash’s programming constructs. they start with a reserved word and are terminated by the corresponding reserved word. compound commands are the shell programming language constructs, each construct begins with a reserved word or control operator and is terminated by a corresponding reserved word or operator.
 		- reserved words: words that have special meaning to the shell, used to begin and end the shell’s compound commands, link -> https://www.gnu.org/software/bash/manual/html_node/Reserved-Words.html.
 
