@@ -120,7 +120,7 @@ User Input:
 		-N chars	-> limit to type exactly the num of chars character
 		-n chars	-> set the limit of input characters
 
-• The "select " command -> provide a 'dropdown' menu/list of options to select from
+• The "select" command -> provide a 'dropdown' menu/list of options to select from
 	-syntax: 
 		PS3="Please select an option:"
 		select variable in options; do

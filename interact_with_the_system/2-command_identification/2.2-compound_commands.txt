@@ -48,7 +48,7 @@ User Input:
 	- any single letter can be placed as optstring but command can process only one letter options.
 	- "optstring" is case-sensitive.
 	- unexpected options are stored as question mark(?) in the variable -> \?)command;;.
-	- often used as part of a while.
+	- often used as part of a while loop.
 	
 	- options can accept arguments, syntax:
 		getopts "a:b:c:"  opt
