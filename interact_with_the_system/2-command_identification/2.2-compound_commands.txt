@@ -32,13 +32,14 @@ User Input:
 		-N chars	    -> limit to type exactly the num of chars character,
 		-n chars	    -> set the limit of input characters.
 
-• The "select" command -> provide a 'dropdown' menu/list of options to select from.
+• The "select" command -> provide a 'dropdown' menu/list of options to select from using the number of the option in the list.
 	-syntax: 
 		PS3="Please select an option:"
 		select variable in options; do
 			commands
 			break
 		done
+	- list strating with 1) and counting.
 
 • The "getopts" command -> enables bash to get options provided to the script from the command line
 	- syntax:
@@ -73,9 +74,12 @@ Logic:
 			nums: [ 2 -eq 2], [ 2 -ne 3]
 			str: [ $a = $b ], [ $a != $b ], [ -z $a ], [ -e $a ]
 			filesys: [ -e/-f/-d/-x path/to/file ]
+		- do not forget the spaces after [ and befor ]!
 
 • Ternary operator: -> statement ? IfTrue : IFFalse
 	- syntax: comandA && commandB || commandC
+
+	example: [ -f /path/to/fire.sh ] && echo true || echo false
 
 • If statement:
 	- syntax:
