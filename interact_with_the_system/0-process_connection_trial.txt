@@ -26,33 +26,16 @@ step1) - tokenization
 step2) - command identification
 -------------------------------
 	- during command identification shell breaks the command line down into simple and compound commands.
-	- definitions:
-		- compound commands: these are bash’s programming constructs. they start with a reserved word and are terminated by the corresponding reserved word. compound commands are the shell programming language constructs, each construct begins with a reserved word or control operator and is terminated by a corresponding reserved word or operator.
-		- reserved words: words that have special meaning to the shell, used to begin and end the shell’s compound commands, link -> https://www.gnu.org/software/bash/manual/html_node/Reserved-Words.html.
-
+	
 -------------------
 step3) - expansions
 -------------------
 	- expansion is performed on the command line after it has been split into tokens and identified commands
-	- link: https://www.gnu.org/software/bash/manual/html_node/Shell-Expansions.html
 	- there are seven (+1) kinds of expansions. the processing order is;
 		1) brace expansion
 		2) tilde expansion, parameter and variable expansion, arithmetic expansion, and command substitution (done in a left-to-right fashion) (+1 process substitution);
 		3) word splitting;
 		4) filename expansion/globbing.
-		- only brace expansion, word splitting, and filename expansion can increase the number of words of the expansion; other expansions expand a single word to a single word.
-	- unfolding stories -> find examples and further details here bash_script/bash_as_programming_language.txt:
-		- brace expansions -> {},
-		- tilde expansion -> ~,
-		- parameter and variable expansion -> $, ${},
-		- arithmetic expansion -> $(()),
-		- command substitution -> $(),
-		- process substitution -> <(), >(),
-		- word splitting: after processing the preceding expansions, the shell will try to split the results of unquoted parameter expansions, unquoted arithmetic expansions and unquoted command substitutions into individual words. mind the different word splitting result of $var and "$var".
-		  ${IFS@Q} - bash will split a word using the characters stored in the IFS variable, which by default contains space, tab, and newline.
-		- filename expansion/globbing: any word containing one of globbing characters is interpreted as a pattern, and replaced with a list of alphabetically-sorted filenames that match the pattern (if they exist)
-			- globbing pattern characters: *, ?, [], [!]. can be extended -> shopt -s extglob.
-				- symbol(pattern1 | ... | patternN) -> symbols are: ?, *. @, +, !.
 
 ----------------------
 step4) - quote removal
