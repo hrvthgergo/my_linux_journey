@@ -17,6 +17,12 @@ User Input:
 	- $1, $2, $3, ...
 	echo "Name: $1"
 	echo "Age: $2"
+	- using the built-in shift command we can remove previous variables:
+		echo $1
+		shift
+		echo $1
+
+		shifttxt.sh 1 2
 
 • Special parameters: -> created by the shell for us, unmodifiable.
 	- $#: num of command line args.
@@ -74,7 +80,7 @@ Logic:
 			nums: [ 2 -eq 2], [ 2 -ne 3]
 			str: [ $a = $b ], [ $a != $b ], [ -z $a ], [ -e $a ]
 			filesys: [ -e/-f/-d/-x path/to/file ]
-		- do not forget the spaces after [ and befor ]!
+		- do not forget the spaces after [ and before ]!
 
 • Ternary operator: -> statement ? IfTrue : IFFalse
 	- syntax: comandA && commandB || commandC
