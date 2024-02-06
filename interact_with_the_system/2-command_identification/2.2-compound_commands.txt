@@ -25,9 +25,12 @@ User Input:
 		shifttxt.sh 1 2
 
 • Special parameters: -> created by the shell for us, unmodifiable.
-	- $#: num of command line args.
+	- $#: num of command line args. important especially if we use shift command after positional parameters.
+	- $@: all arguments.
 	- $0: store the script name.
-	- $?: returns the most recent exit code.
+	- $$: the process id.
+	- $?: returns the most recent/last exit code. be aware, we must store the exit code immediately after running the commanf, if you intend to use it.
+		  the reason if you run e.g. echo $? twice the result is goint to be 0 always.
 
 • The "read" command: -> asks for input from the user and saves it into a variable.
 	- syntax: read [options] variable.
@@ -76,11 +79,12 @@ Logic:
 • Test commands:
 	- syntax: [ test-expression ]
 		- test-expression operators:
-			-eq, -ne, -gt, -lt, =, !=, -z, -n, -e, -f, -d, -x
-			nums: [ 2 -eq 2], [ 2 -ne 3]
-			str: [ $a = $b ], [ $a != $b ], [ -z $a ], [ -e $a ]
-			filesys: [ -e/-f/-d/-x path/to/file ]
+			-eq, -ne, -gt, -lt, -le, -ge, =, !=, -z, -n, -e, -f, -d, -x
+			arithmetic test: [ 2 -eq 2], [ 2 -ne 3]
+			str test : [ $a = $b ], [ $a != $b ], [ -z (arg empty?)/ -n (arg is not empty?) $a ], [ -e $a ]
+			file test: [ -e (file exists?)/-f/-d/-x/-s (file not empty)/-nt (newer then modif date)/-ot path/to/file ]
 		- do not forget the spaces after [ and before ]!
+		- test command and [ are the same, and an actual program on the system.
 
 • Ternary operator: -> statement ? IfTrue : IFFalse
 	- syntax: comandA && commandB || commandC
@@ -103,8 +107,15 @@ Logic:
 			commands
 		fi
 
-	- you can chain test-expression using command chaining list operators:
+	- to avoid empty params situation always involve "" to postitional params -> [ "$1" = hi ].
+	- we can chain test-expression using command chaining list operators and -a, -o options:
 		if [ test-expression1 ] ||/&& [ test-expression2 ];then
+		if [ test-expression1 -a/-o test-expression2 ];then
+	- we can avoid using ; if we place "then" keyword on a separate line:
+		if [ test-expression ]
+		then
+			command
+		fi
 
 • Case statement:
 	- syntax:
@@ -121,6 +132,8 @@ Logic:
 		*)
 			commands;;
 		esac
+
+	- can do pattern matching -> some*), some|other)
 
 -------------
 Loop Through:
